@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 align="center">Forum</h2>
+{% if current_user.moderator %}
+<a href="/theme_add" class="btn btn-primary mr-3">Add theme</a>
+{% endif %}
+<h3 align="left" class="p-3">Themes:</h3>
+
+<ul class="list-group mt-3">
+    {% for item in themes %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <a href="/theme/{{ item.id }}" class="alert-link">{{ item.name }}</a>
+        <div>
+        <span class="badge badge-primary badge-pill">
+            {{ item.id|find_topics|length }} topics
+        </span>
+            {% if current_user.moderator %}
+            <a href="/theme_delete/{{ item.id }}" class="btn btn-outline-danger btn-sm">Delete</a>
+            {% endif %}
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

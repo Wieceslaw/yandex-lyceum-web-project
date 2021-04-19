@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 align="center">{{theme.name}}</h2>
+<a href="/" class="btn btn-secondary mr-3">Back to themes</a>
+{% if current_user.is_authenticated %}
+<a href="/topic_add/{{ theme.id }}" class="btn btn-primary">Add topic</a>
+{% endif %}
+<h3 align="left" class="p-3">Topics:</h3>
+
+<div class="list-group">
+    {% for item in topics %}
+    <a href="/topic/{{ item.id }}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-3 font-weight-bold">{{ item.name }}</h5>
+            <small>Created {{item.created_date.strftime('%b %d %H:%M')}} by {{ item.user.nickname }}</small>
+        </div>
+        <p class="mb-1">{% if item.text|length > 100 %} {{ item.text[:100] }}... {% else %} {{ item.text }} {% endif %}</p>
+        <span class="badge badge-primary badge-pill">{{ item.id|find_messages|length }} comments</span>
+    </a>
+    {% endfor %}
+</div>
+
+{% endblock %}

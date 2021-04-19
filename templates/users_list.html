@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 align="center">Users</h2>
+{% for item in users %}
+<div>
+    <h3>User {{ item.id }} {{ item.nickname }} {{ item.email }}
+        {% if item.banned %}
+        Banned
+        {% endif %}</h3>
+</div>
+{% if not item.moderator %}
+<div>
+    {% if item.banned %}
+    <a href="/user_unban/{{ item.id }}" class="btn btn-primary">
+        Unban user
+    </a>
+    {% else %}
+    <a href="/user_ban/{{ item.id }}" class="btn btn-warning">
+        Ban user
+    </a>
+    {% endif %}
+    <a href="/user_delete/{{ item.id }}" class="btn btn-danger">
+        Delete user
+    </a>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}
