@@ -41,7 +41,6 @@
         {% if current_user.moderator or current_user == item.user %}
         <a href="/message_delete/{{ item.id }}" class="btn btn-outline-danger btn-sm">Delete</a>
         {% endif %}
-
     </div>
     <hr>
 {% endfor %}

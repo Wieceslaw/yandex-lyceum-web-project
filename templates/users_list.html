@@ -1,29 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 align="center">Users</h2>
-{% for item in users %}
-<div>
-    <h3>User {{ item.id }} {{ item.nickname }} {{ item.email }}
-        {% if item.banned %}
-        Banned
-        {% endif %}</h3>
+<h2 align="center" class="m-3">Users</h2>
+
+<div class="">
+    {% for item in users %}
+    <div>
+        <p class=""><b>Nickname:</b> {{ item.nickname }}</p>
+        <p class=""><b>Email:</b> {{ item.email }}</p>
+        <div>
+            {% if not item.moderator %}
+            {% if item.banned %}
+            <a href="/user_unban/{{ item.id }}" class="btn-sm btn btn-outline-primary">Unban user</a>
+            {% else %}
+            <a href="/user_ban/{{ item.id }}" class="btn-sm btn btn-outline-warning">Ban user</a>
+            {% endif %}
+            <a href="/user_delete/{{ item.id }}" class="btn-sm btn btn-outline-danger">Delete user</a>
+            {% endif %}
+        </div>
+    </div><hr>
+    {% endfor %}
 </div>
-{% if not item.moderator %}
-<div>
-    {% if item.banned %}
-    <a href="/user_unban/{{ item.id }}" class="btn btn-primary">
-        Unban user
-    </a>
-    {% else %}
-    <a href="/user_ban/{{ item.id }}" class="btn btn-warning">
-        Ban user
-    </a>
-    {% endif %}
-    <a href="/user_delete/{{ item.id }}" class="btn btn-danger">
-        Delete user
-    </a>
-</div>
-{% endif %}
-{% endfor %}
+
 {% endblock %}

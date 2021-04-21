@@ -36,7 +36,6 @@ def find_topics(theme_id):
 def decode(message_id):
     db_sess = db_session.create_session()
     image = db_sess.query(Messages).filter(Messages.id == message_id).one()
-    print(image.binary)
     if image:
         binary = b64encode(image.binary).decode('utf-8')
     else:
