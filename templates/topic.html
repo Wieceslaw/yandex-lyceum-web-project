@@ -16,11 +16,12 @@
     <small>Created {{ topic.created_date.strftime('%b %d %H:%M') }} by {{ topic.user.nickname }}</small>
 </div>
 {% if current_user.is_authenticated %}
-<form action="" method="post" class="pt-3 pb-3 ml-2">
+<form action="" method="post" class="pt-3 pb-3 ml-2" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     <div>
         <label>Comment as {{ current_user.nickname }}</label>
         {{ form.text(class="form-control", style="height: 150px;") }}<br>
+        {{ form.image(class="form-control", style="height: 45px;") }}<br>
         {{ form.submit(type="submit", class="btn btn-outline-dark btn-block") }}
     </div>
 </form>
@@ -31,8 +32,12 @@
 {% for item in messages %}
     <div>
         <p>{{ item.text }}</p>
+        {% if item.binary|length != 0 %}
+        <div class="m-3">
+            <img src="data:;base64,{{ item.id|decode }}" width="25%" height="25%">
+        </div>
+        {% endif %}
         <small>Commented {{ topic.created_date.strftime('%b %d %H:%M') }} by {{ item.user.nickname }}</small>
-
         {% if current_user.moderator or current_user == item.user %}
         <a href="/message_delete/{{ item.id }}" class="btn btn-outline-danger btn-sm">Delete</a>
         {% endif %}

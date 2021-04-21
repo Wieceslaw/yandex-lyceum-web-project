@@ -7,6 +7,7 @@ from data.users import User
 from data.messages import Messages
 from data.topics import Topics
 import os
+from base64 import b64encode
 
 app = Flask(__name__)
 api = Api(app)
@@ -31,6 +32,18 @@ def find_topics(theme_id):
     return topics
 
 
+@app.template_filter('decode')
+def decode(message_id):
+    db_sess = db_session.create_session()
+    image = db_sess.query(Messages).filter(Messages.id == message_id).one()
+    print(image.binary)
+    if image:
+        binary = b64encode(image.binary).decode('utf-8')
+    else:
+        binary = None
+    return binary
+
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
@@ -45,7 +58,7 @@ def main():
     db_session.global_init('db/main.db')
     app.register_blueprint(blueprints.blueprint)
     # app.run(port=8080, host='127.0.0.1')
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
 
 

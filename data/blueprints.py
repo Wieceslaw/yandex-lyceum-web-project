@@ -11,6 +11,7 @@ from forms.theme import ThemeForm
 from forms.message import MessageForm
 from data.messages import Messages
 from flask_login import login_user, login_required, logout_user, current_user
+from base64 import b64encode
 
 blueprint = flask.Blueprint(
     'blueprints',
@@ -59,24 +60,25 @@ def topic(id):
     topic = db_sess.query(Topics).filter(Topics.id == id).one()
     form = MessageForm()
     messages = db_sess.query(Messages).filter(Messages.topic_id == id).all()
-    if request.method == 'GET':
-        return render_template(
-            'topic.html',
-            title=topic.name,
-            topic=topic,
-            messages=messages,
-            form=form
-        )
     if request.method == 'POST':
         if form.validate_on_submit() and current_user:
+            f = form.image.data
             message = Messages(
                 text=form.text.data,
                 user_id=current_user.id,
-                topic_id=id
+                topic_id=id,
+                binary=f.read()
             )
             db_sess.add(message)
             db_sess.commit()
             return redirect(f'/topic/{id}')
+    return render_template(
+        'topic.html',
+        title=topic.name,
+        topic=topic,
+        messages=messages,
+        form=form
+    )
 
 
 @blueprint.route('/login', methods=['GET', 'POST'])
